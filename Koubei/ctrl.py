@@ -6,7 +6,7 @@ import datetime
 def getSortedKoubei(skuIds, start, end):
     res = {'code':0, 'msg':'Succ', 'data':None}
     try:
-        relateSet = set([int(x) for x in skuIds.split(',')])
+        relateSet = list(set([int(x) for x in skuIds.split(',')]))
     except:
         return res
     
@@ -34,4 +34,4 @@ def getSortedKoubei(skuIds, start, end):
     return res
 
 if __name__ == '__main__':
-    getSortedKoubei('1307017', 0, 10)
+    getSortedKoubei('1246814,1331925,1735864,1735864', 0, 10)

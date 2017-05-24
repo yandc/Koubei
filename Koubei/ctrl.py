@@ -2,12 +2,11 @@
 # coding=utf-8
 from redis_util import *
 import datetime
-import pdb
 
 def getSortedKoubei(skuIds, start, end):
     res = {'code':0, 'msg':'Succ', 'data':None}
     try:
-        relateSet = [int(x) for x in skuIds.split(',')]
+        relateSet = set([int(x) for x in skuIds.split(',')])
     except:
         return res
     

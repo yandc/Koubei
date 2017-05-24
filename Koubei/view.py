@@ -3,8 +3,6 @@
 from django.http import HttpResponse
 from ctrl import *
 import json
-import logging
-import pdb
 
 def getKoubei(request):
     page = 0

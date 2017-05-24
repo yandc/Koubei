@@ -11,7 +11,7 @@ def getSortedKoubei(skuIds, start, end):
         return res
     
     result = []
-    rds = RedisUtil()
+    rds = RedisUtil(env='online')
     for itemId in relateSet:
         key = 'koubei:rank_score:%s'%itemId
         li = rds.get_obj(key)
@@ -34,4 +34,4 @@ def getSortedKoubei(skuIds, start, end):
     return res
 
 if __name__ == '__main__':
-    getSortedKoubei('1246814,1331925,1735864,1735864', 0, 10)
+    print getSortedKoubei('1011554,1077155', 0, 10)

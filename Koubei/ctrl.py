@@ -3,7 +3,7 @@
 from redis_util import *
 import datetime
 
-def getSortedKoubei(skuIds, start, end):
+def getSortedKoubei(skuIds, start, end, debug=False, source='more'):
     res = {'code':0, 'msg':'Succ', 'data':None}
     try:
         relateSet = list(set([int(x) for x in skuIds.split(',')]))
@@ -26,12 +26,13 @@ def getSortedKoubei(skuIds, start, end):
         idList = [x[0] for x in ranked[start:end]]
         res['data'] = idList
         #save expose
-        skuId = relateSet[0]
-        dateStr = datetime.date.today().strftime('%Y%m%d')
-        key = 'koubei:expose:%s:%s'%(dateStr, skuId)
-        rds.inst.rpush(key, json.dumps(idList))
-        rds.inst.expire(key, 30*86400)#expire after 30 days
+        if not debug:
+            skuId = relateSet[0]
+            dateStr = datetime.date.today().strftime('%Y%m%d')
+            key = 'koubei:expose:%s:%s:%s'%(dateStr, source, skuId)
+            rds.inst.rpush(key, json.dumps(idList))
+            rds.inst.expire(key, 30*86400)#expire after 30 days
     return res
 
 if __name__ == '__main__':
-    print getSortedKoubei('1011554,1077155', 0, 10)
+    print getSortedKoubei('1185761', 0, 10, True)

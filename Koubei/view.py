@@ -15,10 +15,14 @@ def getKoubei(request):
             page = int(request.GET['page'])
         if 'pagesize' in request.GET:
             pagesize = int(request.GET['pagesize'])
+        if 'debug' in request.GET:
+            debug = True
+        else:
+            debug = False
         if page >= 0 and pagesize > 0:
             start = page * pagesize
             end = start + pagesize
-            res = getSortedKoubei(skuIds, start, end)
+            res = getSortedKoubei(skuIds, start, end, debug)
     except:
         pass
     resp = HttpResponse(json.dumps(res))

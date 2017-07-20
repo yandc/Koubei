@@ -44,7 +44,7 @@ def getSortedKoubei(skuIds, start, end, debug, source, dvcId):
         res['data'] = idList
         ts = int(time.time())
         #save expose
-        if not debug:
+        if not debug and source in ('outline', 'more'):
             skuId = relateSet[0]
             dateStr = datetime.date.today().strftime('%Y%m%d')
             key = 'koubei:expose:%s:%s:%s'%(dateStr, source, skuId)
@@ -53,5 +53,4 @@ def getSortedKoubei(skuIds, start, end, debug, source, dvcId):
     return res
 
 if __name__ == '__main__':
-    print getSortedKoubei('1199442', 0, 10, True, 'test', '8dd7d90e7c1ca58b7f58f0bdcdf1a931')
-    print getSortedKoubei('1199442', 0, 10, True, 'test', 'abc')
+    print getSortedKoubei('1776529', 0, 10, True, 'outline', '8dd7d90e7c1ca58b7f58f0bdcdf1a931')

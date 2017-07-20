@@ -38,7 +38,7 @@ def getSortedKoubei(skuIds, start, end, debug, source, dvcId):
             result += li[:end]
     if source == 'outline':#filter
         #auto_evaluate, positive, piclen, textlen, 
-        result = [x for x in result if (x[1]!=15 and len(x)>2 and x[2] >=5 and (x[3]>0 or x[4]>20))]
+        result = [x for x in result if (x[1]>15 and len(x)>2 and x[2] >=5 and (x[3]>0 or x[4]>20))]
     ranked = sorted(result, key=lambda x:x[1], reverse=True)
     if start >= len(ranked):
         res['data'] = []

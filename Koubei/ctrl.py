@@ -33,7 +33,9 @@ def getSortedKoubei(skuIds, start, end, debug, source, dvcId):
         if not li:
             continue
         result += li
-    
+    if source == 'outline':#filter
+        #auto_evaluate, positive, piclen, textlen, 
+        result = [x for x in result if (x[1]!=15 and len(x)>2 and x[2] >=5 and (x[3]>0 or x[4]>20))]
     ranked = sorted(result, key=lambda x:x[1], reverse=True)
     if start >= len(ranked):
         res['data'] = []
@@ -51,4 +53,5 @@ def getSortedKoubei(skuIds, start, end, debug, source, dvcId):
     return res
 
 if __name__ == '__main__':
-    print getSortedKoubei('1185761', 0, 10, True, 'test', 'abc')
+    print getSortedKoubei('1199442', 0, 10, True, 'test', '8dd7d90e7c1ca58b7f58f0bdcdf1a931')
+    print getSortedKoubei('1199442', 0, 10, True, 'test', 'abc')

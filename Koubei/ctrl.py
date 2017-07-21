@@ -24,22 +24,28 @@ def getSortedKoubei(skuIds, start, end, debug, source, dvcId):
                 break
             left -= v
         strategy = i
+        
     for itemId in relateSet:
         if strategy == 0:
-            key = 'koubei:rank_score:%s'%itemId
+            key = 'koubei:score:%s'%itemId
         else:
-            key = 'koubei:rank_score:%s:%s'%(strategy, itemId)
-        li = rds.get_obj(key)
-        if not li:
-            continue
-        if source == 'outline':
-            result += li[:50]
-        else:
-            result += li[:end]
+            key = 'koubei:score:%s:%s'%(strategy, itemId)
+        kbList = []
+        llen = rds.inst.llen(key)
+        for idx in xrange(llen):
+            li = json.loads(rds.inst.lindex(key, idx))
+            if not li:
+                break
+            kbList += li
+            if len(kbList) >= end:
+                break
+        result += kbList
+        
     if source == 'outline':#filter
         #auto_evaluate, positive, piclen, textlen, 
         result = [x for x in result if (x[1]>15 and len(x)>2 and x[2] >=5 and (x[3]>0 or x[4]>20))]
     ranked = sorted(result, key=lambda x:x[1], reverse=True)
+    
     if start >= len(ranked):
         res['data'] = []
     else:
@@ -56,4 +62,4 @@ def getSortedKoubei(skuIds, start, end, debug, source, dvcId):
     return res
 
 if __name__ == '__main__':
-    print getSortedKoubei('1776529', 0, 10, True, 'outline', '8dd7d90e7c1ca58b7f58f0bdcdf1a931')
+    print getSortedKoubei('1289742', 0, 10, True, 'outline', '8dd7d90e7c1ca58b7f58f0bdcdf1a931')

@@ -5,6 +5,7 @@ import datetime
 import time
 import zlib
 
+rds = RedisUtil(env='online')
 abTest = [0, 10]
 
 def getSortedKoubei(skuIds, start, end, debug, source, dvcId):
@@ -15,7 +16,6 @@ def getSortedKoubei(skuIds, start, end, debug, source, dvcId):
         return res
     
     result = []
-    rds = RedisUtil(env='online')
     #abTest = rds.get_obj('kbrank:abtest')
     strategy = 0
     if abTest and type(abTest) == list:

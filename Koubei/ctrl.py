@@ -5,6 +5,8 @@ import datetime
 import time
 import zlib
 
+abTest = [0, 10]
+
 def getSortedKoubei(skuIds, start, end, debug, source, dvcId):
     res = {'code':0, 'msg':'Succ', 'data':None}
     try:
@@ -14,7 +16,7 @@ def getSortedKoubei(skuIds, start, end, debug, source, dvcId):
     
     result = []
     rds = RedisUtil(env='online')
-    abTest = rds.get_obj('kbrank:abtest')
+    #abTest = rds.get_obj('kbrank:abtest')
     strategy = 0
     if abTest and type(abTest) == list:
         hint = zlib.crc32(dvcId)&0xffffffff
@@ -31,14 +33,19 @@ def getSortedKoubei(skuIds, start, end, debug, source, dvcId):
         else:
             key = 'koubei:score:%s:%s'%(strategy, itemId)
         kbList = []
-        llen = rds.inst.llen(key)
-        for idx in xrange(llen):
-            li = json.loads(rds.inst.lindex(key, idx))
+        idx = 0
+        while True:
+            jsonli = rds.inst.lindex(key, idx)
+            if not jsonli:
+                break
+            li = json.loads(jsonli)
             if not li:
                 break
             kbList += li
             if len(kbList) >= end:
                 break
+            else:
+                idx += 1
         result += kbList
         
     if source == 'outline':#filter

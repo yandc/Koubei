@@ -32,3 +32,29 @@ def getKoubei(request):
         pass
     resp = HttpResponse(json.dumps(res))
     return resp
+
+def getMaterial(request):
+    page = 0
+    pagesize = 10
+    mtype = ''
+    mids = ''
+    res = {'code':-1, 'msg':'Param error!', 'data':None}
+    try:
+        if 'page' in request.GET:
+            page = int(request.GET['page'])
+        if 'pagesize' in request.GET:
+            pagesize = int(request.GET['pagesize'])
+        if 'type' in request.GET:
+            mtype = request.GET['type']
+            if mtype not in ('sku', 'user', 'brand', 'category'):
+                mtype = ''
+        if 'ids' in request.GET:
+            mids = request.GET['ids']
+        if page >= 0 and pagesize > 0 and mtype and mids:
+            start = page * pagesize
+            end = start + pagesize
+            res = getSortedMaterial(mtype, mids, start, end)
+    except:
+        pass
+    resp = HttpResponse(json.dumps(res))
+    return resp

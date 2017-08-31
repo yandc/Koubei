@@ -68,5 +68,39 @@ def getSortedKoubei(skuIds, start, end, debug, source, dvcId):
             rds.inst.expire(key, 30*86400)#expire after 30 days
     return res
 
+def getSortedMaterial(mtype, mids, start, end):
+    res = {'code':0, 'msg':'Succ', 'data':None}
+    try:
+        idSet = list(set([int(x) for x in mids.split(',')]))
+    except:
+        return res
+    result = []
+    for mid in idSet:
+        key = 'material:%s:%s'%(mtype, mid)
+        scList = []
+        idx = 0
+        while True:
+            jsonli = rds.inst.lindex(key, idx)
+            if not jsonli:
+                break
+            li = json.loads(jsonli)
+            if not li:
+                break
+            scList += li
+            if len(scList) >= end:
+                break
+            else:
+                idx += 1
+        result += scList
+        
+    ranked = sorted(result, key=lambda x:x[1], reverse=True)    
+    if start >= len(ranked):
+        res['data'] = []
+    else:
+        idList = [x[0] for x in ranked[start:end]]
+        res['data'] = idList
+    return res
+
 if __name__ == '__main__':
-    print getSortedKoubei('1289742', 0, 10, True, 'outline', '8dd7d90e7c1ca58b7f58f0bdcdf1a931')
+    print getSortedMaterial('user', '1964082', 0, 10)
+#    print getSortedKoubei('1238723', 0, 100, True, 'noutline', '8dd7d90e7c1ca58b7f58f0bdcdf1a931')

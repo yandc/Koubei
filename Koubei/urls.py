@@ -20,5 +20,6 @@ from view import *
 urlpatterns = [
     #url(r'^koubei/get_koubei/([,\d]+)$', getKoubei),
     url(r'^koubei/get_koubei', getKoubei),
+    url(r'^material/get_material', getMaterial),
 ]
     

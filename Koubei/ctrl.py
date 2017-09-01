@@ -68,12 +68,26 @@ def getSortedKoubei(skuIds, start, end, debug, source, dvcId):
             rds.inst.expire(key, 30*86400)#expire after 30 days
     return res
 
-def getSortedMaterial(mtype, mids, start, end):
+def getSortedMaterial(mtype, mids, start, end, uid):
     res = {'code':0, 'msg':'Succ', 'data':None}
+    exclude = set()
     try:
         idSet = list(set([int(x) for x in mids.split(',')]))
     except:
         return res
+    if uid:
+        key = 'material:user:%s'%(uid)
+        idx = 0
+        while True:
+            jsonli = rds.inst.lindex(key, idx)
+            if not jsonli:
+                break
+            li = json.loads(jsonli)
+            if not li:
+                break
+            for pid, sc in li:
+                exclude.add(pid)
+            idx += 1
     result = []
     for mid in idSet:
         key = 'material:%s:%s'%(mtype, mid)
@@ -83,7 +97,7 @@ def getSortedMaterial(mtype, mids, start, end):
             jsonli = rds.inst.lindex(key, idx)
             if not jsonli:
                 break
-            li = json.loads(jsonli)
+            li = [x for x in json.loads(jsonli) if x[0] not in exclude]
             if not li:
                 break
             scList += li

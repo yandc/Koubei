@@ -38,6 +38,7 @@ def getMaterial(request):
     pagesize = 10
     mtype = ''
     mids = ''
+    uid = 0
     res = {'code':-1, 'msg':'Param error!', 'data':None}
     try:
         if 'page' in request.GET:
@@ -49,11 +50,13 @@ def getMaterial(request):
             if mtype not in ('sku', 'user', 'brand', 'category'):
                 mtype = ''
         if 'ids' in request.GET:
-            mids = request.GET['ids']
+            mids = urllib.unquote(request.GET['ids'])
+        if 'uid' in request.GET:
+            uid = int(request.GET['uid'])
         if page >= 0 and pagesize > 0 and mtype and mids:
             start = page * pagesize
             end = start + pagesize
-            res = getSortedMaterial(mtype, mids, start, end)
+            res = getSortedMaterial(mtype, mids, start, end, uid)
     except:
         pass
     resp = HttpResponse(json.dumps(res))
